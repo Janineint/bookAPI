@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Books API</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Google Books API</h1>
+    <ul id="bookList"></ul>
+    <script>
+        const bookList = document.getElementById("bookList");
+        const apiKey = "AIzaSyAWuhsQTuKX0VjsiftQXKw35K3ifzMm7nk";
+        const apiUrl = `https://www.googleapis.com/books/v1/volumes?q=Warriors&key=${apiKey}`;
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                data.items.forEach(item => {
+                    const title = item.volumeInfo.title;
+                    const author = item.volumeInfo.authors ? item.volumeInfo.authors[0] : "Unknown Author";
+                    const link = item.volumeInfo.canonicalVolumeLink;
+                    const image = item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.smallThumbnail : null;
+
+                    const listItem = document.createElement("li");
+                    const titleElement = document.createElement("h2");
+                    const authorElement = document.createElement("p");
+                    const linkElement = document.createElement("a");
+
+                    titleElement.textContent = title;
+                    authorElement.textContent = `By: ${author}`;
+                    linkElement.textContent = "View More";
+                    linkElement.href = link;
+                    linkElement.target = "_blank";
+
+                    listItem.appendChild(titleElement);
+                    listItem.appendChild(authorElement);
+                    listItem.appendChild(linkElement);
+
+                    if (image) {
+                        const imageElement = document.createElement("img");
+                        imageElement.src = image;
+                        listItem.appendChild(imageElement);
+                    }
+
+                    bookList.appendChild(listItem);
+                });
+            });
+    </script>
+</body>
+</html>
